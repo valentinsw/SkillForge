@@ -42,7 +42,7 @@
   <div class="row g-3 text-center">
     <div class="col-6 col-md-3">
       <div class="stat-card glass-card p-3">
-        <div class="fs-4 fw-bold counter" data-target="{{ stats.courses|default:0 }}">0</div>
+        <div class="fs-4 fw-bold counter" data-target="{{ stats.published_courses|default:0 }}">0</div>
         <div class="text-muted small mt-1">Published Courses</div>
       </div>
     </div>
@@ -60,7 +60,7 @@
     </div>
     <div class="col-6 col-md-3">
       <div class="stat-card glass-card p-3">
-        <div class="fs-4 fw-bold counter" data-target="{{ stats.projects|default:0 }}">0</div>
+        <div class="fs-4 fw-bold counter" data-target="{{ stats.public_projects|default:0 }}">0</div>
         <div class="text-muted small mt-1">Public Projects</div>
       </div>
     </div>
@@ -105,7 +105,7 @@
     {% endif %}
   </div>
   <div class="row g-3">
-    {% for p in featured_projects %}
+    {% for p in community_projects %}
       <div class="col-md-6 col-lg-4">
         <div class="card h-100 shadow-sm project-card">
           <img class="card-img-top p-3 pt-4" src="{% static 'img/project-placeholder.svg' %}" alt="Project">
