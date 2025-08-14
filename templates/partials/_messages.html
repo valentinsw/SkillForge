@@ -1,23 +1,44 @@
+{% comment %}
+Centered, dismissible Bootstrap alerts for Django messages.
+Replaces top-right toasts with a centered stack.
+{% endcomment %}
 {% if messages %}
-<div class="position-fixed top-0 end-0 p-3" style="z-index: 1080">
-  <div id="toast-stack" class="toast-container"></div>
-</div>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const container = document.getElementById('toast-stack');
-    {% for message in messages %}
-      const toast = document.createElement('div');
-      toast.className = 'toast align-items-center text-bg-{{ message.tags|default:"secondary" }} border-0 mb-2';
-      toast.role = 'alert';
-      toast.ariaLive = 'assertive';
-      toast.ariaAtomic = 'true';
-      toast.innerHTML = `<div class="d-flex">
-          <div class="toast-body">{{ message|escape }}</div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>`;
-      container.appendChild(toast);
-      new bootstrap.Toast(toast, { delay: 3500 }).show();
-    {% endfor %}
-  });
-</script>
+  <div class="flash-center">
+    <div class="flash-stack">
+      {% for message in messages %}
+        {# Map Django's "error" to Bootstrap's "danger" #}
+        {% with tag=message.tags|default:"info" %}
+          {% if tag == "error" %}
+            {% with bstag="danger" %}
+              <div class="alert alert-{{ bstag }} alert-dismissible fade show shadow" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endwith %}
+          {% else %}
+            <div class="alert alert-{{ tag }} alert-dismissible fade show shadow" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endif %}
+        {% endwith %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    // Auto-dismiss after 4s (still works if Bootstrap JS isn't loaded)
+    setTimeout(function () {
+      document.querySelectorAll('.flash-center .alert').forEach(function (el) {
+        try {
+          if (window.bootstrap && bootstrap.Alert) {
+            bootstrap.Alert.getOrCreateInstance(el).close();
+          } else {
+            el.classList.remove('show');
+          }
+        } catch (e) { /* no-op */ }
+      });
+    }, 4000);
+  </script>
 {% endif %}
+

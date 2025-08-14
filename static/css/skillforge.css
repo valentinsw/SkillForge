@@ -1,7 +1,4 @@
-/* ------------------------------------------------------------------
-   Global app background (all pages)
-   ------------------------------------------------------------------ */
-
+/* Global app background (all pages) */
 /* LIGHT theme — a bit lighter than before */
 body {
   background-color: #e8ecff; /* was #dbe0ff */
@@ -31,10 +28,7 @@ body {
   background-attachment: fixed, fixed, fixed, fixed, fixed;
 }
 
-/* ==================================================================
-   Surface bars (TOP NAV + FOOTER)
-   ================================================================== */
-
+/* Surface bars (TOP NAV + FOOTER) */
 /* Common glassy feel */
 .sf-surface,
 :root[data-bs-theme='light'] nav.navbar.bg-body-tertiary,
@@ -60,9 +54,7 @@ body {
   border-color: rgba(111, 66, 193, 0.28) !important;
 }
 
-/* ------------------------------------------------------------------
-   Home hero (vibrant overlay)
-   ------------------------------------------------------------------ */
+/* Home hero (vibrant overlay) */
 .hero-section {
   background: linear-gradient(135deg, rgba(13,110,253,.90), rgba(111,66,193,.90));
   color: #fff;
@@ -74,26 +66,19 @@ body {
   background: linear-gradient(135deg, rgba(13,110,253,.42), rgba(111,66,193,.42));
 }
 
-/* ------------------------------------------------------------------
-   Subtle interaction
-   ------------------------------------------------------------------ */
+/* Subtle interaction */
 .course-card:hover,
 .project-card:hover {
   transform: translateY(-2px);
   transition: transform .2s ease;
 }
 
-/* ------------------------------------------------------------------
-   Brand tweaks
-   ------------------------------------------------------------------ */
+/* Brand tweaks */
 .navbar-brand img {
   filter: drop-shadow(0 1px 1px rgba(0,0,0,.25));
 }
 
-
-
-/* =================== Enhancements / Overhaul =================== */
-
+/* Enhancements / Overhaul */
 /* Animated gradient text for headline */
 .gradient-text {
   background: linear-gradient(90deg, #fff 0%, #cfe2ff 50%, #ffffff 100%);
@@ -168,3 +153,32 @@ body {
 .hero-shape-2 { width: 260px; height: 260px; right: -50px; bottom: -50px; background: radial-gradient(circle, #6f42c1, transparent 60%); }
 :root[data-bs-theme='dark'] .hero-shape-1 { opacity: .45; }
 :root[data-bs-theme='dark'] .hero-shape-2 { opacity: .45; }
+
+/* Centered flash messages */
+.flash-center {
+  position: fixed;
+  inset: 0;                  /* cover viewport */
+  z-index: 1080;
+  display: flex;
+  align-items: flex-start;   /* stick to the top */
+  justify-content: center;   /* centered horizontally */
+  padding: 1rem;
+  padding-top: clamp(1rem, 6vh, 3rem); /* top offset */
+  pointer-events: none;
+}
+.flash-center .flash-stack {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  width: min(640px, 92vw);
+}
+.flash-center .alert {
+  pointer-events: auto;
+  margin: 0;
+  animation: flashFadeIn .2s ease-out;
+}
+@keyframes flashFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
