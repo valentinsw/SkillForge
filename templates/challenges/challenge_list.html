@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Challenges · SkillForge{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h4 mb-0 d-flex align-items-center gap-2">
+    <i class="bi bi-list-check"></i> Challenges
+  </h1>
+  <a href="{% url 'courses:list' %}" class="btn btn-outline-primary btn-sm">
+    <i class="bi bi-mortarboard"></i> Explore Courses
+  </a>
+</div>
+
+{% if object_list %}
+  <div class="row g-3">
+    {% for ch in object_list %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm challenge-card">
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex align-items-start justify-content-between">
+              <h2 class="h6 mb-1">{{ ch.title }}</h2>
+              {% if ch.due_date %}
+                <span class="badge text-bg-secondary">Due {{ ch.due_date|date:"M d, Y" }}</span>
+              {% endif %}
+            </div>
+            <div class="text-muted small mb-2">
+              {% if ch.course %}<i class="bi bi-book"></i> {{ ch.course.title }}{% endif %}
+            </div>
+            <p class="mb-3 text-muted small">{{ ch.description|truncatewords:25 }}</p>
+
+            <div class="mt-auto d-flex gap-2">
+              <!-- Adjust URL names if different in your urls.py -->
+              <a class="btn btn-sm btn-primary" href="{% url 'challenges:detail' ch.pk %}">
+                Open
+              </a>
+              {% if user.is_authenticated %}
+                <a class="btn btn-sm btn-outline-secondary" href="{% url 'challenges:submission-create' ch.pk %}">
+                  Submit
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="alert alert-info">
+    No challenges yet. Check <a href="{% url 'courses:list' %}" class="alert-link">Courses</a> to get started.
+  </div>
+{% endif %}
+{% endblock %}
+

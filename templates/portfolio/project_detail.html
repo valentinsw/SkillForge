@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ object.title }} · Project{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      {% if object.image %}
+        <img src="{{ object.image.url }}" class="card-img-top" alt="{{ object.title }}">
+      {% elif object.cover %}
+        <img src="{{ object.cover.url }}" class="card-img-top" alt="{{ object.title }}">
+      {% else %}
+        <img src="{% static 'img/project-placeholder.svg' %}" class="card-img-top" alt="Project cover">
+      {% endif %}
+      <div class="card-body">
+        <h1 class="h4 mb-2">{{ object.title }}</h1>
+        <p class="text-muted small mb-3">By {{ object.owner.username }} · {{ object.created_at|date:"M d, Y" }}</p>
+
+        {# --- Links row --- #}
+        {% if object.repo_url or object.live_url %}
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            {% if object.repo_url %}
+              <a class="btn btn-sm btn-outline-secondary"
+                 href="{{ object.repo_url }}" target="_blank" rel="noopener">
+                <i class="bi bi-github"></i> Repository
+              </a>
+            {% endif %}
+            {% if object.live_url %}
+              <a class="btn btn-sm btn-outline-success"
+                 href="{{ object.live_url }}" target="_blank" rel="noopener">
+                <i class="bi bi-box-arrow-up-right"></i> Live demo
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        <div class="prose">
+          {{ object.description|linebreaksbr }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="d-grid gap-2">
+      {% if user == object.owner %}
+        <a class="btn btn-outline-primary" href="{% url 'portfolio:edit' object.pk %}">Edit</a>
+        <a class="btn btn-outline-danger" href="{% url 'portfolio:delete' object.pk %}">Delete</a>
+      {% endif %}
+      <a class="btn btn-secondary" href="{% url 'portfolio:projects' %}">Back to my projects</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

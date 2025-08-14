@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}SkillForge · Learn by building{% endblock %}
+{% block content %}
+
+<!-- HERO -->
+<section class="hero-section rounded-4 p-5 mb-5 position-relative overflow-hidden">
+  <div class="row align-items-center">
+    <div class="col-lg-7">
+      <h1 class="display-5 fw-bold mb-3 gradient-text">Forge your skills with real projects</h1>
+      <p class="lead">Browse curated Django courses, complete hands-on challenges, and showcase your work in a shareable portfolio.</p>
+      <div class="d-flex gap-2 mt-3">
+        <a href="{% url 'courses:list' %}" class="btn btn-primary btn-lg">Explore Courses</a>
+        {% if user.is_authenticated %}
+          <a href="/portfolio/my/" class="btn btn-outline-light btn-lg">My Portfolio</a>
+        {% else %}
+          <a href="{% url 'accounts:register' %}" class="btn btn-outline-light btn-lg">Get Started</a>
+        {% endif %}
+      </div>
+      <div class="mt-4 d-flex flex-wrap gap-4 small text-white-50">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-award"></i><span>Hands-on challenges</span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-shield-lock"></i><span>Best-practice architecture</span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-stars"></i><span>Portfolio-ready</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5 text-center d-none d-lg-block">
+      <img class="img-fluid floating" src="{% static 'img/hero-illustration.svg' %}" alt="Hero">
+    </div>
+  </div>
+  <div class="hero-shape-1"></div>
+  <div class="hero-shape-2"></div>
+</section>
+
+<!-- STATS -->
+<section class="mb-5">
+  <div class="row g-3 text-center">
+    <div class="col-6 col-md-3">
+      <div class="stat-card glass-card p-3">
+        <div class="fs-4 fw-bold counter" data-target="{{ stats.courses|default:0 }}">0</div>
+        <div class="text-muted small mt-1">Published Courses</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card glass-card p-3">
+        <div class="fs-4 fw-bold counter" data-target="{{ stats.challenges|default:0 }}">0</div>
+        <div class="text-muted small mt-1">Challenges</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card glass-card p-3">
+        <div class="fs-4 fw-bold counter" data-target="{{ stats.submissions|default:0 }}">0</div>
+        <div class="text-muted small mt-1">Submissions</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card glass-card p-3">
+        <div class="fs-4 fw-bold counter" data-target="{{ stats.projects|default:0 }}">0</div>
+        <div class="text-muted small mt-1">Public Projects</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED COURSES -->
+<section class="mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 mb-0">Featured Courses</h2>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'courses:list' %}">View all</a>
+  </div>
+  <div class="row g-3">
+    {% for c in featured_courses %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm course-card">
+          <img class="card-img-top p-3 pt-4" src="{% static 'img/course-placeholder.svg' %}" alt="Course">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title mb-1">{{ c.title }}</h5>
+            <p class="card-text text-muted small mb-3">{{ c.short_description }}</p>
+            <div class="mt-auto d-flex justify-content-between align-items-center">
+              <span class="badge badge-gradient">Django</span>
+              <a class="btn btn-sm btn-primary" href="{% url 'courses:detail' c.slug %}">View</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-info mb-0">No courses yet. Check back soon!</div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- COMMUNITY PROJECTS -->
+<section class="mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 mb-0">Community Projects</h2>
+    {% if user.is_authenticated %}
+      <a class="btn btn-sm btn-outline-primary" href="{% url 'portfolio:create' %}">Add project</a>
+    {% endif %}
+  </div>
+  <div class="row g-3">
+    {% for p in featured_projects %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm project-card">
+          <img class="card-img-top p-3 pt-4" src="{% static 'img/project-placeholder.svg' %}" alt="Project">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title mb-1">{{ p.title }}</h5>
+            <p class="card-text text-muted small mb-2">by {{ p.owner.username }}</p>
+            <div class="d-flex align-items-center gap-2 text-warning small mb-3">
+              {% with avg=p.avg_rating|default_if_none:0 %}
+                <i class="bi bi-star-fill"></i>
+                <span>{{ avg|floatformat:1 }}/5 · {{ p.reviews_count|default:0 }} reviews</span>
+              {% endwith %}
+            </div>
+            <div class="mt-auto d-flex justify-content-between align-items-center">
+              <div class="d-flex gap-2">
+                {% if p.repo_url %}<a class="btn btn-sm btn-outline-secondary" href="{{ p.repo_url }}" target="_blank" rel="noopener">Repo</a>{% endif %}
+                {% if p.live_url %}<a class="btn btn-sm btn-outline-secondary" href="{{ p.live_url }}" target="_blank" rel="noopener">Live</a>{% endif %}
+              </div>
+              <a class="btn btn-sm btn-primary" href="{% url 'portfolio:detail' p.pk %}">Details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-info mb-0">No public projects yet. Be the first to share!</div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="mb-5">
+  <div class="row g-3">
+    <div class="col-lg-4">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex align-items-center gap-2 mb-2 text-warning"><i class="bi bi-stars"></i><strong>“A perfect exam project”</strong></div>
+        <p class="mb-0">“The structure checks all boxes for the defense and still feels like real-world Django.”</p>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex align-items-center gap-2 mb-2 text-warning"><i class="bi bi-stars"></i><strong>“Looks and feels modern”</strong></div>
+        <p class="mb-0">“Dark mode, gradients, and clean cards — my jurors literally said wow.”</p>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex align-items-center gap-2 mb-2 text-warning"><i class="bi bi-stars"></i><strong>“Easy to extend”</strong></div>
+        <p class="mb-0">“The codebase is tidy: CBVs, forms, permissions — adding features is straightforward.”</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA STRIP -->
+<section class="rounded-4 p-4 p-md-5 cta-strip text-center text-md-start d-md-flex align-items-center justify-content-between">
+  <div class="mb-3 mb-md-0">
+    <h3 class="h4 mb-1">Ready to build something impressive?</h3>
+    <p class="mb-0 text-white-50">Start a course, complete a challenge, and publish to your portfolio today.</p>
+  </div>
+  <div class="d-flex gap-2 justify-content-center">
+    <a href="{% url 'courses:list' %}" class="btn btn-light"><i class="bi bi-mortarboard"></i> Start Learning</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'portfolio:create' %}" class="btn btn-outline-light"><i class="bi bi-rocket-takeoff"></i> Publish Project</a>
+    {% else %}
+      <a href="{% url 'accounts:register' %}" class="btn btn-outline-light"><i class="bi bi-person-plus"></i> Join now</a>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

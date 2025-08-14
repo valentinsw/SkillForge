@@ -1,0 +1,170 @@
+/* ------------------------------------------------------------------
+   Global app background (all pages)
+   ------------------------------------------------------------------ */
+
+/* LIGHT theme — a bit lighter than before */
+body {
+  background-color: #e8ecff; /* was #dbe0ff */
+
+  /* reduce corner tint opacity slightly for a softer feel */
+  background-image:
+    radial-gradient(1200px 800px at 0% 0%, rgba(13,110,253,0.26), rgba(13,110,253,0) 60%),
+    radial-gradient(1100px 700px at 100% 100%, rgba(111,66,193,0.24), rgba(111,66,193,0) 60%),
+    radial-gradient(900px 600px at 100% 0%, rgba(88,86,214,0.10), rgba(88,86,214,0) 60%),
+    radial-gradient(900px 600px at 0% 100%, rgba(0,166,255,0.10), rgba(0,166,255,0) 60%),
+    /* lighter base sweep */
+    linear-gradient(180deg, #eef1ff 0%, #e5e9ff 100%); /* was #e0e4ff→#cfd6ff */
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed, fixed, fixed;
+}
+
+/* DARK theme — unchanged */
+:root[data-bs-theme='dark'] body {
+  background-color: #070b12;
+  background-image:
+    radial-gradient(1200px 800px at 0% 0%, rgba(13,110,253,0.44), rgba(13,110,253,0) 60%),
+    radial-gradient(1100px 700px at 100% 100%, rgba(111,66,193,0.40), rgba(111,66,193,0) 60%),
+    radial-gradient(900px 600px at 100% 0%, rgba(88,86,214,0.22), rgba(88,86,214,0) 60%),
+    radial-gradient(900px 600px at 0% 100%, rgba(0,166,255,0.20), rgba(0,166,255,0) 60%),
+    linear-gradient(180deg, #070b12 0%, #0d1220 100%);
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed, fixed, fixed;
+}
+
+/* ==================================================================
+   Surface bars (TOP NAV + FOOTER)
+   ================================================================== */
+
+/* Common glassy feel */
+.sf-surface,
+:root[data-bs-theme='light'] nav.navbar.bg-body-tertiary,
+:root[data-bs-theme='light'] footer.bg-body-tertiary {
+  backdrop-filter: saturate(120%) blur(6px);
+  -webkit-backdrop-filter: saturate(120%) blur(6px);
+}
+
+/* LIGHT theme: lighter surface to match the new background */
+:root[data-bs-theme='light'] .sf-surface,
+:root[data-bs-theme='light'] nav.navbar.bg-body-tertiary,
+:root[data-bs-theme='light'] footer.bg-body-tertiary {
+  background-color: rgba(230, 235, 255, 0.74) !important; /* lighter than before */
+  border-color: rgba(111, 66, 193, 0.12) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+}
+
+/* DARK theme: keep subtle */
+:root[data-bs-theme='dark'] .sf-surface,
+:root[data-bs-theme='dark'] nav.navbar,
+:root[data-bs-theme='dark'] footer {
+  background-color: rgba(17, 22, 34, 0.75) !important;
+  border-color: rgba(111, 66, 193, 0.28) !important;
+}
+
+/* ------------------------------------------------------------------
+   Home hero (vibrant overlay)
+   ------------------------------------------------------------------ */
+.hero-section {
+  background: linear-gradient(135deg, rgba(13,110,253,.90), rgba(111,66,193,.90));
+  color: #fff;
+}
+.hero-section .btn-outline-light { border-color: rgba(255,255,255,.6); color: #fff; }
+.hero-section .btn-outline-light:hover { background: rgba(255,255,255,.15); }
+
+:root[data-bs-theme='dark'] .hero-section {
+  background: linear-gradient(135deg, rgba(13,110,253,.42), rgba(111,66,193,.42));
+}
+
+/* ------------------------------------------------------------------
+   Subtle interaction
+   ------------------------------------------------------------------ */
+.course-card:hover,
+.project-card:hover {
+  transform: translateY(-2px);
+  transition: transform .2s ease;
+}
+
+/* ------------------------------------------------------------------
+   Brand tweaks
+   ------------------------------------------------------------------ */
+.navbar-brand img {
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,.25));
+}
+
+
+
+/* =================== Enhancements / Overhaul =================== */
+
+/* Animated gradient text for headline */
+.gradient-text {
+  background: linear-gradient(90deg, #fff 0%, #cfe2ff 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shine 6s linear infinite;
+}
+@keyframes shine {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Floating illustration */
+.floating { animation: floatY 6s ease-in-out infinite; }
+@keyframes floatY {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Soft glass cards */
+.glass-card {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(111,66,193,0.14);
+  border-radius: 1rem;
+  box-shadow: 0 8px 30px rgba(31, 38, 135, 0.07);
+}
+:root[data-bs-theme='dark'] .glass-card {
+  background: rgba(17, 22, 34, 0.5);
+  border-color: rgba(111,66,193,0.25);
+}
+
+/* Course & project cards hover */
+.course-card, .project-card {
+  border: 1px solid rgba(111,66,193,0.12);
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.course-card:hover, .project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.12);
+}
+
+/* Fancy badge */
+.badge-gradient {
+  --start: #0d6efd;
+  --end: #6f42c1;
+  background: linear-gradient(90deg, var(--start), var(--end));
+  color: #fff;
+  padding: .35rem .6rem;
+  border-radius: 999px;
+  font-size: .75rem;
+  box-shadow: 0 1px 0 rgba(255,255,255,.25) inset, 0 2px 6px rgba(13,110,253,.25);
+}
+
+/* Stat cards */
+.stat-card { border-radius: 0.75rem; }
+.stat-card .counter { letter-spacing: .5px; }
+
+/* CTA strip */
+.cta-strip {
+  background: linear-gradient(135deg, rgba(13,110,253,.95), rgba(111,66,193,.95));
+  color: #fff;
+}
+
+/* Hero shapes */
+.hero-shape-1, .hero-shape-2 {
+  position: absolute; pointer-events: none; filter: blur(40px); opacity: .35;
+}
+.hero-shape-1 { width: 220px; height: 220px; left: -40px; top: -40px; background: radial-gradient(circle, #0d6efd, transparent 60%); }
+.hero-shape-2 { width: 260px; height: 260px; right: -50px; bottom: -50px; background: radial-gradient(circle, #6f42c1, transparent 60%); }
+:root[data-bs-theme='dark'] .hero-shape-1 { opacity: .45; }
+:root[data-bs-theme='dark'] .hero-shape-2 { opacity: .45; }

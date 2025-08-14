@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}My Projects · SkillForge{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center">
+  <h2>My Projects</h2>
+  <a class="btn btn-primary" href="{% url 'portfolio:create' %}"><i class="bi bi-plus-lg me-1"></i> New Project</a>
+</div>
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mt-2">
+  {% for p in object_list %}
+  <div class="col">
+    <div class="card h-100 shadow-sm project-card">
+      <img class="card-img-top" src="{% static 'img/project-placeholder.svg' %}" alt="">
+      <div class="card-body">
+        <h5 class="card-title"><a href="{% url 'portfolio:detail' p.pk %}">{{ p.title }}</a></h5>
+        <p class="card-text text-secondary">{{ p.description|truncatechars:140 }}</p>
+        <div class="d-flex gap-2">
+          {% if p.repo_url %}<a class="btn btn-sm btn-outline-secondary" href="{{ p.repo_url }}" target="_blank">Repo</a>{% endif %}
+          {% if p.live_url %}<a class="btn btn-sm btn-outline-secondary" href="{{ p.live_url }}" target="_blank">Live</a>{% endif %}
+        </div>
+      </div>
+      <div class="card-footer d-flex justify-content-between align-items-center">
+        <small class="text-muted">{{ p.created_at|date:"M d, Y" }}</small>
+        <span class="badge {% if p.is_public %}text-bg-success{% else %}text-bg-secondary{% endif %}">{% if p.is_public %}Public{% else %}Private{% endif %}</span>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+    <p>You have no projects yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

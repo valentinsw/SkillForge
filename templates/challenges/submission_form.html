@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load form_tags %}
+{% block title %}Submit Solution · {{ view.challenge.title|default:"Challenge" }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h4 mb-0">
+    {% if object %}Edit Submission{% else %}New Submission{% endif %}
+  </h1>
+  <a class="btn btn-outline-secondary btn-sm" href="{% url 'challenges:detail' view.kwargs.challenge_id|default:object.challenge_id %}">
+    <i class="bi bi-arrow-left"></i> Back to Challenge
+  </a>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="card shadow-sm">
+  <div class="card-body">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="mb-3">
+      <label class="form-label" for="{{ form.text_answer.id_for_label }}">Answer</label>
+      {{ form.text_answer|add_class:"form-control" }}
+      <div class="form-text text-danger">{{ form.text_answer.errors }}</div>
+    </div>
+
+    {% if form.attachment %}
+      <div class="mb-3">
+        <label class="form-label" for="{{ form.attachment.id_for_label }}">Attachment (optional)</label>
+        {{ form.attachment|add_class:"form-control" }}
+        <div class="form-text text-danger">{{ form.attachment.errors }}</div>
+      </div>
+    {% endif %}
+  </div>
+  <div class="card-footer d-flex justify-content-end gap-2">
+    <a class="btn btn-outline-secondary" href="{% url 'challenges:detail' view.kwargs.challenge_id|default:object.challenge_id %}">Cancel</a>
+    <button class="btn btn-primary" type="submit">Save</button>
+  </div>
+</form>
+{% endblock %}
+
