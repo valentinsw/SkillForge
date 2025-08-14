@@ -1,44 +1,107 @@
 # SkillForge
 
-Micro-learning platform built with Django. Public can browse courses; authenticated users enroll, do challenges, submit solutions, and maintain a portfolio with projects & reviews.
+A small learning portal built with **Django 5**. It includes:
 
-## Quickstart (Local venv)
+- Courses (list/detail, optional lessons)
+- Coding challenges (list/detail, optional submissions)
+- Personal portfolio (projects & reviews)
+- Auth (login/register/logout), a simple dashboard, Bootstrap 5 UI
+- Read‑only sample REST API (Django REST Framework)
+- Basic tests
+
+---
+
+## Quickstart (local)
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\Activate.ps1
+source .venv/bin/activate          # Windows: .venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 pip install -r requirements.txt
-cp .env.example .env
+cp .env.example .env               # then edit if you like
 python manage.py migrate
-python manage.py createsuperuser
+python manage.py seed_roles        # create 'Staff' group & sync perms
 python manage.py runserver
 ```
 
-Visit http://127.0.0.1:8000
+Open: <http://127.0.0.1:8000>
 
-## Demo Roles (optional fixtures)
+### Optional: demo users & sample content
 
-You can create users in admin and place "staff" users into the **Staff** group created by `python manage.py seed_roles`.
+This creates two users and a handful of courses, challenges, projects, lessons, etc.
 
-## Tech & Structure
+```bash
+# Add demo content
+python manage.py seed_demo
 
-- Django 5, DRF (read-only sample), Bootstrap 5
-- Apps: core, accounts, courses, challenges, portfolio, api
-- Authentication: login/register/logout
-- Public: Home, About, Courses (list/detail)
-- Private: Dashboard, Lessons (detail), Challenges (list/detail), Submissions CRUD, Portfolio (Projects CRUD, Reviews CRUD)
-- Admin: Customized lists, filters, ordering, inlines, etc.
-- Error pages: 400/403/404/500
+# Or reset and re‑seed safely (idempotent)
+python manage.py seed_demo --reset
+```
+
+**Demo credentials**
+
+- `demo / DemoPass123!` (regular user)
+- `staff / StaffPass123!` (is_staff, in the “Staff” group)
+
+> If you already created a different superuser, you can still log in with that
+> account. Demo users are just for quick exploration.
+
+---
+
+## App URLs (high level)
+
+- `/` — Home
+- `/about/` — About
+- `/dashboard/` — User dashboard (login required)
+- `/courses/` — Course list (+ detail)
+- `/challenges/` — Challenge list (+ detail; submissions if supported)
+- `/portfolio/` — Public projects
+- `/portfolio/create/` — Create a project (login required)
+- `/api/` — Sample DRF endpoints (read‑only)
+
+---
+
+## Project structure
+
+```
+accounts/      # auth views, forms, profile model
+api/           # DRF serializers & read-only API views
+challenges/    # challenges (+ optional submissions)
+config/        # settings, urls, wsgi/asgi
+core/          # pages, dashboard, template tags, mgmt commands
+courses/       # courses (+ optional lessons, enrollments)
+portfolio/     # projects & reviews
+static/        # css/js/img
+templates/     # django templates
+tests/         # basic test suite
+manage.py
+requirements.txt
+```
+
+---
+
+## Environment
+
+`./.env.example` contains sensible development defaults. For production, set:
+
+- `DEBUG=0`
+- `ALLOWED_HOSTS=yourdomain.com,localhost`
+- Database settings (e.g. `DATABASE_URL`) if using Postgres
+
+Static files are served by Django in development; use a proper server or CDN for production.
+
+---
 
 ## Tests
-
-Run tests:
 
 ```bash
 python manage.py test
 ```
 
-## Environment
+---
 
-`.env.example` contains development defaults. For deploy, set `DEBUG=0`, proper `ALLOWED_HOSTS` and a `DATABASE_URL` if using PostgreSQL.
+## Notes
+
+- The code is intentionally small and approachable so learners can scan it quickly.
+- Some models have optional fields; the seeders only set attributes that exist in your schema.
+- If you rename URL names or models, tweak the templates/seeders accordingly.
