@@ -1,12 +1,25 @@
 from django.urls import path
-from .views import (ChallengeListView, ChallengeDetailView,
-                    SubmissionCreateView, SubmissionUpdateView, SubmissionDeleteView)
+from .views import (
+    ChallengeListView,
+    ChallengeDetailView,
+    SubmissionCreateView,
+    SubmissionUpdateView,
+    SubmissionDeleteView,
+)
 
 app_name = "challenges"
+
 urlpatterns = [
     path("", ChallengeListView.as_view(), name="list"),
     path("<int:pk>/", ChallengeDetailView.as_view(), name="detail"),
+
+    # Primary create route
     path("<int:challenge_pk>/submit/", SubmissionCreateView.as_view(), name="submit"),
+
+    # Alias used by templates (same pattern, different name)
+    path("<int:challenge_pk>/submit/", SubmissionCreateView.as_view(), name="submission-create"),
+
     path("submission/<int:pk>/edit/", SubmissionUpdateView.as_view(), name="submission_edit"),
     path("submission/<int:pk>/delete/", SubmissionDeleteView.as_view(), name="submission_delete"),
 ]
+
