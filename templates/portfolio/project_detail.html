@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}{{ object.title }} · Project{% endblock %}
+
 {% block content %}
 <div class="row g-4">
+  <!-- Main column -->
   <div class="col-lg-8">
-    <div class="card shadow-sm">
+    <div class="card shadow-sm mb-3">
       {% if object.image %}
         <img src="{{ object.image.url }}" class="card-img-top" alt="{{ object.title }}">
       {% elif object.cover %}
@@ -14,20 +16,23 @@
       {% endif %}
       <div class="card-body">
         <h1 class="h4 mb-2">{{ object.title }}</h1>
-        <p class="text-muted small mb-3">By {{ object.owner.username }} · {{ object.created_at|date:"M d, Y" }}</p>
+        <p class="text-muted small mb-2">By {{ object.owner.username }} · {{ object.created_at|date:"M d, Y" }}</p>
 
-        {# --- Links row --- #}
+        {% if avg_rating %}
+          <div class="small text-warning mb-2">
+            <i class="bi bi-star-fill"></i> {{ avg_rating|floatformat:1 }}/5 · {{ reviews_count }} reviews
+          </div>
+        {% endif %}
+
         {% if object.repo_url or object.live_url %}
           <div class="d-flex flex-wrap gap-2 mb-3">
             {% if object.repo_url %}
-              <a class="btn btn-sm btn-outline-secondary"
-                 href="{{ object.repo_url }}" target="_blank" rel="noopener">
+              <a class="btn btn-sm btn-outline-secondary" href="{{ object.repo_url }}" target="_blank" rel="noopener">
                 <i class="bi bi-github"></i> Repository
               </a>
             {% endif %}
             {% if object.live_url %}
-              <a class="btn btn-sm btn-outline-success"
-                 href="{{ object.live_url }}" target="_blank" rel="noopener">
+              <a class="btn btn-sm btn-outline-success" href="{{ object.live_url }}" target="_blank" rel="noopener">
                 <i class="bi bi-box-arrow-up-right"></i> Live demo
               </a>
             {% endif %}
@@ -39,15 +44,67 @@
         </div>
       </div>
     </div>
+
+    <!-- Reviews -->
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h6 mb-3 d-flex align-items-center gap-2">
+          <i class="bi bi-chat-left-dots"></i> Reviews
+        </h2>
+
+        {% if reviews_count %}
+          <ul class="list-group list-group-flush">
+            {% for r in object.reviews.all %}
+              <li class="list-group-item">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="me-auto small">
+                    <strong>{{ r.reviewer.username }}</strong>
+                    <span class="text-muted">· {{ r.created_at|date:"M d, Y" }}</span>
+                  </div>
+
+                  <div class="text-warning small me-2">
+                    <i class="bi bi-star-fill"></i> {{ r.rating }}/5
+                  </div>
+
+                  {# fixed: no parentheses, nest the checks #}
+                  {% if user.is_authenticated %}
+                    {% if user.is_staff or user == r.reviewer or user == object.owner %}
+                      <a class="btn btn-sm btn-outline-secondary me-1" href="{% url 'portfolio:review_edit' r.pk %}">Edit</a>
+                      <a class="btn btn-sm btn-outline-danger" href="{% url 'portfolio:review_delete' r.pk %}">Delete</a>
+                    {% endif %}
+                  {% endif %}
+                </div>
+
+                {% if r.comment %}
+                  <p class="mb-0 mt-2">{{ r.comment }}</p>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <div class="alert alert-info mb-0">No reviews yet.</div>
+        {% endif %}
+      </div>
+    </div>
   </div>
 
+  <!-- Sidebar -->
   <div class="col-lg-4">
     <div class="d-grid gap-2">
       {% if user == object.owner %}
         <a class="btn btn-outline-primary" href="{% url 'portfolio:edit' object.pk %}">Edit</a>
         <a class="btn btn-outline-danger" href="{% url 'portfolio:delete' object.pk %}">Delete</a>
       {% endif %}
-      <a class="btn btn-secondary" href="{% url 'portfolio:projects' %}">Back to my projects</a>
+
+      {% if can_review %}
+        <a class="btn btn-primary" href="{% url 'portfolio:review_create' object.pk %}">
+          <i class="bi bi-plus-circle"></i> Add review
+        </a>
+      {% elif user_has_reviewed %}
+        <button class="btn btn-secondary" disabled>You already reviewed</button>
+      {% endif %}
+
+      <a class="btn btn-outline-secondary" href="{% url 'portfolio:projects' %}">Back to my projects</a>
     </div>
   </div>
 </div>
