@@ -2,8 +2,8 @@ from django.urls import path
 from django.views.generic import RedirectView
 from .views import (
     MyProjectsListView, ProjectDetailView, ProjectCreateView,
-    ProjectUpdateView, ProjectDeleteView, ReviewCreateView,
-    ReviewUpdateView, ReviewDeleteView,   # NEW
+    ProjectUpdateView, ProjectDeleteView,
+    ReviewCreateView, ReviewUpdateView, ReviewDeleteView,
 )
 
 app_name = "portfolio"
@@ -25,7 +25,7 @@ urlpatterns = [
 
     # reviews
     path("<int:project_pk>/reviews/add/", ReviewCreateView.as_view(), name="review_create"),
-    path("reviews/<int:pk>/edit/", ReviewUpdateView.as_view(), name="review_edit"),     # NEW
-    path("reviews/<int:pk>/delete/", ReviewDeleteView.as_view(), name="review_delete"), # NEW
+    path("reviews/<int:pk>/edit/", ReviewUpdateView.as_view(), name="review_edit"),
+    path("reviews/<int:pk>/delete/", ReviewDeleteView.as_view(), name="review_delete"),
 ]
 
