@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.dist/
+.build/
+.pytest_cache/
+.mypy_cache/
+.coverage*
+htmlcov/
+
+# Virtualenv
+.venv/
+venv/
+env/
+
+# Django
+db.sqlite3
+/media/
+staticfiles/
+
+# IDE/OS
+.vscode/
+.idea/
+.DS_Store
+
+# Env / secrets
+.env
+*.local
+
