@@ -9,13 +9,19 @@
     </h1>
     <div class="text-muted small">
       {% if object.course %}<i class="bi bi-book"></i> {{ object.course.title }} · {% endif %}
-      {% if object.due_date %}<i class="bi bi-calendar2-event"></i> Due {{ object.due_date|date:"M d, Y" }}{% endif %}
+      {% if object.deadline %}
+        <i class="bi bi-calendar2-event"></i> Due {{ object.deadline|date:"M d, Y" }}
+      {% elif object.due_date %}
+        <i class="bi bi-calendar2-event"></i> Due {{ object.due_date|date:"M d, Y" }}
+      {% endif %}
     </div>
   </div>
   <div class="d-flex gap-2">
-    <a class="btn btn-outline-secondary btn-sm" href="{% url 'challenges:list' %}"><i class="bi bi-arrow-left"></i> All Challenges</a>
+    <a class="btn btn-outline-secondary btn-sm" href="{% url 'challenges:list' %}">
+      <i class="bi bi-arrow-left"></i> All Challenges
+    </a>
     {% if user.is_authenticated %}
-      <a class="btn btn-primary btn-sm" href="{% url 'challenges:submission-create' object.pk %}">
+      <a class="btn btn-primary btn-sm" href="{% url 'challenges:submit' object.pk %}">
         <i class="bi bi-upload"></i> Submit Solution
       </a>
     {% endif %}
@@ -25,48 +31,58 @@
 <div class="card shadow-sm mb-3">
   <div class="card-body">
     <h2 class="h6 mb-2">Description</h2>
-    <div class="text-muted">{{ object.description|linebreaks }}</div>
+    <div class="text-muted">
+      {# Prefer fields that actually exist; no risky filter args #}
+      {% if object.prompt %}
+        {{ object.prompt|linebreaks }}
+      {% elif object.text %}
+        {{ object.text|linebreaks }}
+      {% elif object.description %}
+        {{ object.description|linebreaks }}
+      {% else %}
+        <em>No description provided.</em>
+      {% endif %}
+    </div>
   </div>
 </div>
 
-{% if user.is_authenticated and object.submissions %}
-  <!-- If your reverse name is not 'submissions', this section will still render the button above. -->
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <h2 class="h6 mb-2">Recent Submissions</h2>
-      <div class="table-responsive">
-        <table class="table align-middle">
-          <thead>
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h2 class="h6 mb-2">Recent Submissions</h2>
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Author</th>
+            <th>Created</th>
+            <th>Score</th>
+            <th class="text-end"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in object.submissions.all|slice:":5" %}
             <tr>
-              <th>Author</th>
-              <th>Created</th>
-              <th>Score</th>
-              <th></th>
+              <td class="small">{{ s.author.username }}</td>
+              <td class="small">{{ s.created_at|date:"M d, Y H:i" }}</td>
+              <td class="small">{{ s.score|default:"—" }}</td>
+              <td class="text-end">
+                {% if s.author_id == user.id %}
+                  <a class="btn btn-sm btn-outline-primary" href="{% url 'challenges:submission_edit' s.pk %}">Edit</a>
+                  <a class="btn btn-sm btn-outline-danger" href="{% url 'challenges:submission_delete' s.pk %}">Delete</a>
+                {% else %}
+                  <span class="badge text-bg-light">View only</span>
+                {% endif %}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {% for s in object.submissions.all|slice:":5" %}
-              <tr>
-                <td class="small">{{ s.author.username }}</td>
-                <td class="small">{{ s.created_at|date:"M d, Y H:i" }}</td>
-                <td class="small">{{ s.score|default:"—" }}</td>
-                <td class="text-end">
-                  {% if s.author_id == user.id %}
-                    <a class="btn btn-sm btn-outline-primary" href="{% url 'challenges:submission-edit' s.pk %}">Edit</a>
-                    <a class="btn btn-sm btn-outline-danger" href="{% url 'challenges:submission-delete' s.pk %}">Delete</a>
-                  {% else %}
-                    <span class="badge text-bg-light">View only</span>
-                  {% endif %}
-                </td>
-              </tr>
-            {% empty %}
-              <tr><td colspan="4" class="text-muted small">No submissions yet.</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+          {% empty %}
+            <tr>
+              <td colspan="4" class="text-muted small">No submissions yet.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
-{% endif %}
+</div>
 {% endblock %}
 
