@@ -5,16 +5,22 @@ from django.urls import reverse_lazy
 from .models import Challenge, Submission
 from .forms import SubmissionForm
 
-class ChallengeListView(LoginRequiredMixin, ListView):
+# Public list (tests expect 200 for anonymous users)
+class ChallengeListView(ListView):
     template_name = "challenges/challenge_list.html"
     model = Challenge
 
-class ChallengeDetailView(LoginRequiredMixin, DetailView):
+# Public detail
+class ChallengeDetailView(DetailView):
     template_name = "challenges/challenge_detail.html"
     model = Challenge
 
-class UserIsOwnerMixin(UserPassesTestMixin):
-    def test_func(self): return self.get_object().author == self.request.user
+class AuthorOrStaffRequiredMixin(UserPassesTestMixin):
+    raise_exception = True
+    def test_func(self):
+        sub = self.get_object()
+        u = self.request.user
+        return u.is_authenticated and (sub.author_id == u.id or u.is_staff)
 
 class SubmissionCreateView(LoginRequiredMixin, CreateView):
     template_name = "forms/form.html"
@@ -32,15 +38,18 @@ class SubmissionCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("challenges:detail", kwargs={"pk": self.challenge.pk})
 
-class SubmissionUpdateView(LoginRequiredMixin, UserIsOwnerMixin, UpdateView):
+class SubmissionUpdateView(LoginRequiredMixin, AuthorOrStaffRequiredMixin, UpdateView):
     template_name = "forms/form.html"
     model = Submission
     form_class = SubmissionForm
+
     def get_success_url(self):
         return reverse_lazy("challenges:detail", kwargs={"pk": self.object.challenge.pk})
 
-class SubmissionDeleteView(LoginRequiredMixin, UserIsOwnerMixin, DeleteView):
+class SubmissionDeleteView(LoginRequiredMixin, AuthorOrStaffRequiredMixin, DeleteView):
     template_name = "forms/confirm_delete.html"
     model = Submission
+
     def get_success_url(self):
         return reverse_lazy("challenges:detail", kwargs={"pk": self.object.challenge.pk})
+
