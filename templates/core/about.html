@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<!-- Hero -->
+<!-- HERO -->
 <section class="hero-section rounded-4 p-5 mb-5 position-relative overflow-hidden">
   <div class="row align-items-center">
     <div class="col-lg-7">
@@ -13,13 +13,14 @@
         <h1 class="h2 mb-0">About SkillForge</h1>
       </div>
       <p class="lead">
-        SkillForge is a Django learning project that feels like a real app:
-        browse curated courses, complete practical challenges, and publish a portfolio you’re proud of.
+        SkillForge is a Django learning project that behaves like a real product.
+        Explore courses, ship challenge solutions, and publish a portfolio you can share.
       </p>
       <div class="d-flex flex-wrap gap-3 mt-3 small text-white-75">
-        <span class="d-inline-flex align-items-center gap-2"><i class="bi bi-check2-circle"></i> MVT + SOLID</span>
-        <span class="d-inline-flex align-items-center gap-2"><i class="bi bi-shield-lock"></i> Secure auth & perms</span>
-        <span class="d-inline-flex align-items-center gap-2"><i class="bi bi-collection"></i> CBVs & clean templates</span>
+        <span class="d-inline-flex align-items-center gap-2"><i class="bi bi-diagram-3"></i> Clean MVT</span>
+        <span class="d-inline-flex align-items-center gap-2"><i class="bi bi-shield-lock"></i> Auth & permissions</span>
+        <span class="d-inline-flex align-items-center gap-2"><i class="bi bi-collection"></i> CBVs + forms</span>
+        <span class="d-inline-flex align-items-center gap-2"><i class="bi bi-gear"></i> Admin tuned</span>
       </div>
     </div>
     <div class="col-lg-5 d-none d-lg-block text-center">
@@ -30,80 +31,208 @@
   <div class="hero-shape-2"></div>
 </section>
 
-<!-- What you'll learn -->
+<!-- HIGHLIGHTS FOR DEVELOPERS -->
 <section class="mb-5">
-  <h2 class="h4 mb-3">What you’ll learn building SkillForge</h2>
+  <h2 class="h4 mb-3">Highlights for developers</h2>
   <div class="row g-3">
-    <div class="col-md-6 col-lg-4">
+    <div class="col-md-6 col-xl-4">
       <div class="glass-card p-3 h-100">
-        <div class="d-flex align-items-center gap-2 mb-1"><i class="bi bi-diagram-3"></i><strong>MVT done right</strong></div>
-        <p class="mb-0 small text-muted">Tidy separation across models, views (CBVs), templates, and forms.</p>
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <i class="bi bi-diagram-3"></i><strong>MVT done right</strong>
+        </div>
+        <p class="mb-0 small text-muted">Concise models, class-based views, semantic templates, and focused forms.</p>
       </div>
     </div>
-    <div class="col-md-6 col-lg-4">
+    <div class="col-md-6 col-xl-4">
       <div class="glass-card p-3 h-100">
-        <div class="d-flex align-items-center gap-2 mb-1"><i class="bi bi-file-earmark-text"></i><strong>Forms & validation</strong></div>
-        <p class="mb-0 small text-muted">Server-side validation with user-friendly error messages and clean widgets.</p>
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <i class="bi bi-file-earmark-text"></i><strong>Forms & validation</strong>
+        </div>
+        <p class="mb-0 small text-muted">ModelForms, server-side constraints, helpful messages, ownership checks.</p>
       </div>
     </div>
-    <div class="col-md-6 col-lg-4">
+    <div class="col-md-6 col-xl-4">
       <div class="glass-card p-3 h-100">
-        <div class="d-flex align-items-center gap-2 mb-1"><i class="bi bi-lock"></i><strong>Auth & permissions</strong></div>
-        <p class="mb-0 small text-muted">Public vs private, staff vs superuser, and secure ownership checks.</p>
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <i class="bi bi-shield-check"></i><strong>Security first</strong>
+        </div>
+        <p class="mb-0 small text-muted">CSRF by default, permission gates, safe redirects, and proper escaping.</p>
       </div>
     </div>
-    <div class="col-md-6 col-lg-4">
+    <div class="col-md-6 col-xl-4">
       <div class="glass-card p-3 h-100">
-        <div class="d-flex align-items-center gap-2 mb-1"><i class="bi bi-speedometer2"></i><strong>Query efficiency</strong></div>
-        <p class="mb-0 small text-muted">Use <code>select_related</code>/<code>annotate</code> to keep pages snappy.</p>
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <i class="bi bi-speedometer2"></i><strong>Snappy queries</strong>
+        </div>
+        <p class="mb-0 small text-muted"><code>select_related</code>, <code>prefetch_related</code>, and <code>annotate</code> where it matters.</p>
       </div>
     </div>
-    <div class="col-md-6 col-lg-4">
+    <div class="col-md-6 col-xl-4">
       <div class="glass-card p-3 h-100">
-        <div class="d-flex align-items-center gap-2 mb-1"><i class="bi bi-tools"></i><strong>Admin customization</strong></div>
-        <p class="mb-0 small text-muted">Filters, search, ordering, and safe role management from the admin.</p>
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <i class="bi bi-kanban"></i><strong>Real tasks</strong>
+        </div>
+        <p class="mb-0 small text-muted">Blog Engine, CSV Importer, Image Gallery, and a JWT Todo API—no lorem ipsum.</p>
       </div>
     </div>
-    <div class="col-md-6 col-lg-4">
+    <div class="col-md-6 col-xl-4">
       <div class="glass-card p-3 h-100">
-        <div class="d-flex align-items-center gap-2 mb-1"><i class="bi bi-shield-check"></i><strong>Security basics</strong></div>
-        <p class="mb-0 small text-muted">CSRF, XSS, parameter tampering prevention, and safe redirects.</p>
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <i class="bi bi-gear-wide-connected"></i><strong>Production-minded</strong>
+        </div>
+        <p class="mb-0 small text-muted">Namespaced URLs, reusable partials, tidy admin, and easy extensibility.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- How it’s structured -->
-<section class="mb-5">
+<!-- APP MAP & ARCHITECTURE -->
+<section class="mb-5 about-structure">
   <h2 class="h4 mb-3">How SkillForge is structured</h2>
+  <div class="row g-3">
+    <!-- Apps & architecture -->
+    <div class="col-lg-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title d-flex align-items-center gap-2 mb-1">
+            <i class="bi bi-journal-code"></i> Apps & architecture
+          </h5>
+          <p class="text-muted small mb-2">
+            <strong>core</strong> (home, about, dashboard), <strong>accounts</strong> (auth),
+            <strong>courses</strong> (public CBVs), <strong>challenges</strong> (private CRUD),
+            <strong>portfolio</strong> (main feature).
+          </p>
+          <ul class="small mb-3">
+            <li>10+ pages, 5+ CBVs, 5+ models, 5+ forms, responsive Bootstrap templates.</li>
+            <li>Public browse (courses) and private CRUD (challenges/submissions, portfolio).</li>
+            <li>Auth & roles: login/register; <em>Staff</em> group (limited), superuser (full).</li>
+            <li>Routing: namespaced URLs (<code>courses:list</code>, <code>portfolio:detail</code>), clean slugs/IDs.</li>
+          </ul>
+
+          <div class="small">
+            <div class="text-uppercase text-muted fw-semibold mb-1">Request lifecycle</div>
+            <div class="p-2 rounded glass-card">
+              <code>URLconf → CBV → Form (validate) → ORM → Template (messages)</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Highlights / conventions -->
+    <div class="col-lg-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title d-flex align-items-center gap-2 mb-1">
+            <i class="bi bi-stars"></i> Highlights & conventions
+          </h5>
+          <ul class="small mb-3">
+            <li><strong>Readable CBVs:</strong> slim views, most logic in forms/managers.</li>
+            <li><strong>Template partials:</strong> shared <code>base.html</code> + toasts/messages partial.</li>
+            <li><strong>Query hygiene:</strong> annotate counts/rating, avoid N+1s.</li>
+            <li><strong>Ownership gates:</strong> users can only edit their own content; staff can moderate.</li>
+            <li><strong>API-friendly:</strong> DRF patterns ready for integration/expansion.</li>
+          </ul>
+
+          <div class="row g-2 small">
+            <div class="col-6">
+              <div class="p-2 rounded glass-card h-100">
+                <div class="text-uppercase text-muted fw-semibold mb-1">Tech stack</div>
+                <ul class="mb-0 ps-3">
+                  <li>Django 5</li>
+                  <li>Python 3.13</li>
+                  <li>Bootstrap 5</li>
+                  <li>DRF (sample)</li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-2 rounded glass-card h-100">
+                <div class="text-uppercase text-muted fw-semibold mb-1">Data model</div>
+                <ul class="mb-0 ps-3">
+                  <li>User / Course / Lesson</li>
+                  <li>Challenge / Submission</li>
+                  <li>Project / Review</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECURITY & PERFORMANCE -->
+<section class="mb-5">
+  <h2 class="h4 mb-3">Security & performance practices</h2>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title d-flex align-items-center gap-2 mb-1">
+            <i class="bi bi-shield-lock"></i> Security
+          </h5>
+          <ul class="small mb-0">
+            <li>CSRF protection on forms and safe redirects.</li>
+            <li>Object-level permissions (review/project ownership; staff moderation).</li>
+            <li>Escaped templates and conservative exposure of user data.</li>
+            <li>Login required for private routes; read-only for public pages.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title d-flex align-items-center gap-2 mb-1">
+            <i class="bi bi-speedometer2"></i> Performance & quality
+          </h5>
+          <ul class="small mb-0">
+            <li>Efficient ORM usage: <code>select_related</code> / <code>prefetch_related</code>.</li>
+            <li>Calculated annotations for counts/averages where useful.</li>
+            <li>Paginated lists and concise templates for fast rendering.</li>
+            <li>Clear URL naming and small, composable components.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SETUP & DEMO DATA -->
+<section class="mb-5">
+  <h2 class="h4 mb-3">Setup & demo data</h2>
   <div class="row g-3">
     <div class="col-lg-6">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
-          <h5 class="card-title d-flex align-items-center gap-2 mb-1"><i class="bi bi-journal-code"></i> Apps</h5>
-          <p class="text-muted small mb-2">
-            <strong>core</strong> (home, about, dashboard), <strong>accounts</strong> (auth), 
-            <strong>courses</strong> (public CBVs), <strong>challenges</strong> (private CRUD),
-            <strong>portfolio</strong> (MAIN feature).
-          </p>
-          <ul class="small mb-0">
-            <li>At least 10 pages, 5+ CBVs, 5+ models, 5+ forms, responsive templates.</li>
-            <li>Public browse (courses), private CRUD (challenges/submissions, portfolio).</li>
-            <li>Admin split: staff (limited) and superuser (full).</li>
-          </ul>
+          <h5 class="card-title d-flex align-items-center gap-2 mb-1">
+            <i class="bi bi-terminal"></i> Quickstart
+          </h5>
+          <pre class="small bg-body-tertiary p-3 rounded mb-0"><code>python -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+cp .env.example .env
+python manage.py migrate
+python manage.py runserver</code></pre>
         </div>
       </div>
     </div>
     <div class="col-lg-6">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
-          <h5 class="card-title d-flex align-items-center gap-2 mb-1"><i class="bi bi-kanban"></i> Defense tips</h5>
-          <ul class="small mb-0">
-            <li>Start with a 60-second live demo: courses → challenge → submit → portfolio.</li>
-            <li>Show the code flow: URL → CBV → form → template; highlight validation and messages.</li>
-            <li>Open the admin: show filters/search and role separation.</li>
-            <li>Address security: CSRF in forms, ownership checks, escaping in templates.</li>
-          </ul>
+          <h5 class="card-title d-flex align-items-center gap-2 mb-1">
+            <i class="bi bi-lightning-charge"></i> Seed demo content
+          </h5>
+          <p class="small text-muted mb-2">
+            Optional: create sample users, courses, challenges, and portfolio items.
+          </p>
+          <pre class="small bg-body-tertiary p-3 rounded"><code>python manage.py seed_demo --reset</code></pre>
+          <p class="small mb-0">
+            Logins: <code>demo / DemoPass123!</code> &nbsp;·&nbsp; <code>staff / StaffPass123!</code>
+          </p>
         </div>
       </div>
     </div>
@@ -117,36 +246,36 @@
     <div class="accordion-item">
       <h2 class="accordion-header" id="f1">
         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#c1" aria-expanded="true" aria-controls="c1">
-          Can I use this as my Django defense project?
+          Can I use this for a Django exam/defense?
         </button>
       </h2>
       <div id="c1" class="accordion-collapse collapse show" aria-labelledby="f1" data-bs-parent="#faqAcc">
         <div class="accordion-body">
-          Yes. It covers the required pages, models, forms, templates, auth, and admin customizations. It’s also easy to extend (REST, async, tests) for bonus points.
+          Yes. It includes core requirements (views, models, forms, templates, auth, admin) and is easy to extend (REST, async, tests) for extra credit.
         </div>
       </div>
     </div>
     <div class="accordion-item">
       <h2 class="accordion-header" id="f2">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c2" aria-expanded="false" aria-controls="c2">
-          How do I populate demo data?
+          Which parts are public vs private?
         </button>
       </h2>
       <div id="c2" class="accordion-collapse collapse" aria-labelledby="f2" data-bs-parent="#faqAcc">
         <div class="accordion-body">
-          Run <code>python manage.py seed_demo --with-users</code> (optionally add <code>--fresh</code>). Users: <code>admin/admin123</code>, <code>staff/staff123</code>, <code>student/student123</code>.
+          Public: home, about, courses list/detail. Private: dashboard, challenges & submissions, portfolio CRUD. Admin: staff vs superuser roles.
         </div>
       </div>
     </div>
     <div class="accordion-item">
       <h2 class="accordion-header" id="f3">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c3" aria-expanded="false" aria-controls="c3">
-          Which parts are public vs private?
+          Where do “Featured Courses” and “Community Projects” come from?
         </button>
       </h2>
       <div id="c3" class="accordion-collapse collapse" aria-labelledby="f3" data-bs-parent="#faqAcc">
         <div class="accordion-body">
-          Public: home, about, courses list/detail. Private: dashboard, challenges & submissions, portfolio CRUD. Admin: staff vs superuser roles.
+          Featured Courses = newest published courses. Community Projects = newest public projects with optional reviews and averages.
         </div>
       </div>
     </div>
@@ -156,8 +285,8 @@
 <!-- CTA -->
 <section class="rounded-4 p-4 p-md-5 cta-strip text-center text-md-start d-md-flex align-items-center justify-content-between">
   <div class="mb-3 mb-md-0">
-    <h3 class="h4 mb-1">Start building your portfolio today</h3>
-    <p class="mb-0 text-white-50">Pick a course, ship a challenge submission, and publish your project.</p>
+    <h3 class="h4 mb-1">Ready to learn by building?</h3>
+    <p class="mb-0 text-white-50">Pick a course, complete a challenge, and ship a project to your portfolio.</p>
   </div>
   <div class="d-flex gap-2 justify-content-center">
     <a href="{% url 'courses:list' %}" class="btn btn-light"><i class="bi bi-mortarboard"></i> Explore Courses</a>
