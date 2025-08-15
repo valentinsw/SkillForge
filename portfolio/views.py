@@ -2,8 +2,6 @@ from django.db.models import Avg, Count
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-from django.contrib import messages
-from django.shortcuts import redirect
 
 from .models import Project, Review
 from .forms import ProjectForm, ReviewForm
@@ -37,6 +35,9 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
 
 
 class OwnerRequiredMixin(UserPassesTestMixin):
+    # Return 403 for authenticated users who fail the check
+    raise_exception = True
+
     def test_func(self):
         return self.get_object().owner == self.request.user
 
@@ -86,28 +87,12 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy("portfolio:detail", kwargs={"pk": self.kwargs["project_pk"]})
 
 
-# --- Permissions for review edit/delete with graceful redirect -----------------
+# --- Permissions for review edit/delete (return 403 when denied) -----------------
 
 class ReviewEditPermissionMixin(UserPassesTestMixin):
-    """Edit allowed only for review author or site staff."""
-    def test_func(self):
-        review = self.get_object()
-        u = self.request.user
-        return u.is_authenticated and (u.is_staff or review.reviewer_id == u.id)
+    """Edit allowed for review author, project owner, or site staff."""
+    raise_exception = True
 
-    def handle_no_permission(self):
-        # Try to redirect back to the project page with a friendly message
-        try:
-            review = self.get_object()
-            messages.error(self.request, "Permission denied: you can only edit your own review.")
-            return redirect("portfolio:detail", pk=review.project_id)
-        except Exception:
-            messages.error(self.request, "Permission denied.")
-            return redirect("portfolio:projects")
-
-
-class ReviewDeletePermissionMixin(UserPassesTestMixin):
-    """Delete allowed for review author, site staff, or project owner."""
     def test_func(self):
         review = self.get_object()
         u = self.request.user
@@ -115,17 +100,17 @@ class ReviewDeletePermissionMixin(UserPassesTestMixin):
             u.is_staff or review.reviewer_id == u.id or review.project.owner_id == u.id
         )
 
-    def handle_no_permission(self):
-        try:
-            review = self.get_object()
-            messages.error(
-                self.request,
-                "Permission denied: only the author, project owner, or staff can delete reviews."
-            )
-            return redirect("portfolio:detail", pk=review.project_id)
-        except Exception:
-            messages.error(self.request, "Permission denied.")
-            return redirect("portfolio:projects")
+
+class ReviewDeletePermissionMixin(UserPassesTestMixin):
+    """Delete allowed for review author, site staff, or project owner."""
+    raise_exception = True
+
+    def test_func(self):
+        review = self.get_object()
+        u = self.request.user
+        return u.is_authenticated and (
+            u.is_staff or review.reviewer_id == u.id or review.project.owner_id == u.id
+        )
 
 
 class ReviewUpdateView(LoginRequiredMixin, ReviewEditPermissionMixin, UpdateView):
