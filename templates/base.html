@@ -22,13 +22,43 @@
     </button>
     <div class="collapse navbar-collapse" id="sfNavbar">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'list' and request.resolver_match.app_name == 'courses' %}active{% endif %}" href="{% url 'courses:list' %}">Courses</a></li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match and request.resolver_match.app_name == 'courses' %}active{% endif %}"
+             href="{% url 'courses:list' %}" {% if request.resolver_match and request.resolver_match.app_name == 'courses' %}aria-current="page"{% endif %}>
+            Courses
+          </a>
+        </li>
+
         {% if user.is_authenticated %}
-          <li class="nav-item"><a class="nav-link" href="/challenges/">Challenges</a></li>
-          <li class="nav-item"><a class="nav-link" href="/portfolio/my/">My Portfolio</a></li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match and request.resolver_match.app_name == 'challenges' %}active{% endif %}"
+               href="{% url 'challenges:list' %}" {% if request.resolver_match and request.resolver_match.app_name == 'challenges' %}aria-current="page"{% endif %}>
+              Challenges
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match and request.resolver_match.app_name == 'portfolio' %}active{% endif %}"
+               href="{% url 'portfolio:projects' %}" {% if request.resolver_match and request.resolver_match.app_name == 'portfolio' %}aria-current="page"{% endif %}>
+              My Portfolio
+            </a>
+          </li>
         {% endif %}
-        <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">About</a></li>
+
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match and request.resolver_match.url_name == 'leaderboard' %}active{% endif %}"
+             href="{% url 'leaderboard' %}" {% if request.resolver_match and request.resolver_match.url_name == 'leaderboard' %}aria-current="page"{% endif %}>
+            <i class="bi bi-trophy"></i> Leaderboard
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match and request.resolver_match.url_name == 'about' %}active{% endif %}"
+             href="{% url 'about' %}" {% if request.resolver_match and request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %}>
+            About
+          </a>
+        </li>
       </ul>
+
       <div class="d-flex align-items-center gap-2">
         <button id="themeToggle" class="btn btn-outline-secondary btn-sm" type="button" aria-label="Toggle theme">
           <i class="bi bi-moon-stars"></i>

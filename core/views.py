@@ -1,12 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.db.models import Count, Avg
+from django.template.response import TemplateResponse
+from asgiref.sync import sync_to_async
 
 from courses.models import Course
 from portfolio.models import Project
 from challenges.models import Challenge, Submission
 
-# Optional imports so the app works even if these models are not present
 try:
     from courses.models import Enrollment  # type: ignore
 except Exception:  # pragma: no cover
@@ -59,7 +60,7 @@ def dashboard(request):
     """Personal dashboard with quick stats and recent activity."""
     user = request.user
 
-    # --- counts for the header cards / checklist
+    # Counts
     published_courses_count = Course.objects.filter(is_published=True).count()
     my_courses_count = (
         Enrollment.objects.filter(user=user).count() if Enrollment else 0
@@ -70,7 +71,7 @@ def dashboard(request):
         Review.objects.filter(reviewer=user).count() if Review else 0
     )
 
-    # --- recent activity lists
+    # Recent activity
     recent_projects = (
         Project.objects.filter(owner=user).order_by("-created_at")[:5]
     )
@@ -82,7 +83,7 @@ def dashboard(request):
     recent_enrollments = (
         Enrollment.objects.filter(user=user)
         .select_related("course")
-        .order_by("-joined_at")[:5]     # IMPORTANT: Enrollment has joined_at
+        .order_by("-joined_at")[:5]
         if Enrollment
         else []
     )
@@ -104,13 +105,17 @@ def dashboard(request):
 
 # Async (bonus)
 async def leaderboard(request):
-    # ORM in async view will run in threadpool automatically
-    top = list(
-        Submission.objects.values("author__username")
-        .annotate(n=Count("id"))
-        .order_by("-n")[:10]
-    )
-    return render(request, "core/leaderboard.html", {"top": top})
+    # Run ORM in a thread and defer template rendering
+    @sync_to_async
+    def _get_top():
+        return list(
+            Submission.objects.values("author__username")
+            .annotate(n=Count("id"))
+            .order_by("-n")[:10]
+        )
+
+    top = await _get_top()
+    return TemplateResponse(request, "core/leaderboard.html", {"top": top})
 
 
 # Error handlers
