@@ -17,6 +17,36 @@
   <div class="hero-shape-2"></div>
 </section>
 
+<!-- At a glance -->
+<section class="mb-4">
+  <div class="row g-3 text-center">
+    <div class="col-6 col-lg-3">
+      <div class="glass-card p-3 h-100">
+        <div class="fs-4 fw-semibold">{{ stats.my_projects }}</div>
+        <div class="text-muted small">Projects</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="glass-card p-3 h-100">
+        <div class="fs-4 fw-semibold">{{ stats.my_submissions }}</div>
+        <div class="text-muted small">Submissions</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="glass-card p-3 h-100">
+        <div class="fs-4 fw-semibold">{{ stats.courses }}</div>
+        <div class="text-muted small">Published Courses</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="glass-card p-3 h-100">
+        <div class="fs-4 fw-semibold">{{ stats.my_reviews }}</div>
+        <div class="text-muted small">Reviews given</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Quick actions -->
 <section class="mb-4">
   <div class="row g-3">
@@ -82,16 +112,16 @@
             <h2 class="h5 mb-0 d-flex align-items-center gap-2"><i class="bi bi-folder2-open"></i> My Portfolio</h2>
             <a href="{% url 'portfolio:create' %}" class="btn btn-sm btn-primary">Add project</a>
           </div>
-          {% with projects=user.projects.all %}
+          {% with projects=recent_projects %}
             {% if projects %}
               <ul class="list-group list-group-flush">
-                {% for p in projects|slice:":5" %}
+                {% for p in projects %}
                   <li class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="me-2">
                       <div class="fw-semibold">{{ p.title }}</div>
                       <div class="small text-muted">{{ p.created_at|date:"M d, Y" }}</div>
 
-                      {# Repo / Live links #}
+                      <!-- Repo / Live links -->
                       <div class="d-flex gap-2 mt-1">
                         {% if p.repo_url %}
                           <a href="{{ p.repo_url }}" target="_blank" rel="noopener"
@@ -140,12 +170,12 @@
           <h2 class="h5 mb-2 d-flex align-items-center gap-2"><i class="bi bi-activity"></i> Recent Activity</h2>
 
           <!-- Submissions -->
-          {% with subs=user.submissions.all %}
+          {% with subs=recent_submissions %}
             {% if subs %}
               <div class="mb-3">
                 <div class="text-muted small mb-1">Latest submissions</div>
                 <ul class="list-group list-group-flush">
-                  {% for s in subs|slice:":5" %}
+                  {% for s in subs %}
                     <li class="list-group-item d-flex justify-content-between align-items-start">
                       <div class="me-2">
                         <div class="fw-semibold">{{ s.challenge.title }}</div>
@@ -160,16 +190,16 @@
           {% endwith %}
 
           <!-- Enrollments -->
-          {% with ens=user.enrollments.all %}
+          {% with ens=recent_enrollments %}
             {% if ens %}
               <div>
                 <div class="text-muted small mb-1">Your courses</div>
                 <ul class="list-group list-group-flush">
-                  {% for e in ens|slice:":5" %}
+                  {% for e in ens %}
                     <li class="list-group-item d-flex justify-content-between align-items-start">
                       <div class="me-2">
                         <div class="fw-semibold">{{ e.course.title }}</div>
-                        <div class="small text-muted">Enrolled on {{ e.created_at|date:"M d, Y" }}</div>
+                        <div class="small text-muted">Joined on {{ e.joined_at|date:"M d, Y" }}</div>
                       </div>
                       <a class="btn btn-sm btn-outline-primary" href="{% url 'courses:detail' e.course.slug %}">Open</a>
                     </li>
@@ -179,11 +209,93 @@
             {% endif %}
           {% endwith %}
 
-          {% if not user.submissions.all and not user.enrollments.all %}
+          {% if not recent_submissions and not recent_enrollments %}
             <div class="alert alert-secondary mb-0">
               No recent activity yet. Start with a <a href="{% url 'courses:list' %}">course</a> or post a <a href="{% url 'portfolio:create' %}">project</a>.
             </div>
           {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Second row: Feedback + Checklist -->
+    <div class="col-lg-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h2 class="h5 mb-2 d-flex align-items-center gap-2"><i class="bi bi-chat-left-dots"></i> Latest feedback on your projects</h2>
+          {% with my_projects=recent_projects %}
+            {% if my_projects %}
+              <ul class="list-group list-group-flush">
+                {% for p in my_projects %}
+                  {% with latest=p.reviews.all|slice:":1" %}
+                    {% if latest %}
+                      {% for r in latest %}
+                        <li class="list-group-item">
+                          <div class="d-flex justify-content-between">
+                            <div class="small">
+                              <strong>{{ r.reviewer.username }}</strong>
+                              <span class="text-muted">on</span>
+                              <a class="text-decoration-none" href="{% url 'portfolio:detail' p.pk %}">{{ p.title }}</a>
+                              <span class="text-muted">· {{ r.created_at|date:"M d, Y" }}</span>
+                            </div>
+                            <div class="text-warning small"><i class="bi bi-star-fill"></i> {{ r.rating }}/5</div>
+                          </div>
+                          {% if r.comment %}<p class="mb-0 mt-1">{{ r.comment }}</p>{% endif %}
+                        </li>
+                      {% endfor %}
+                    {% endif %}
+                  {% endwith %}
+                {% endfor %}
+              </ul>
+            {% else %}
+              <div class="alert alert-info mb-0">No projects yet — publish your first one to start collecting feedback.</div>
+            {% endif %}
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h2 class="h5 mb-2 d-flex align-items-center gap-2"><i class="bi bi-check2-circle"></i> Profile checklist</h2>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Add your name
+              {% if user.first_name or user.last_name %}
+                <span class="badge text-bg-success">Done</span>
+              {% else %}
+                <a href="{% url 'accounts:profile' %}" class="btn btn-sm btn-outline-primary">Edit</a>
+              {% endif %}
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Enroll in a course
+              {% if stats.my_courses %}
+                <span class="badge text-bg-success">Done</span>
+              {% else %}
+                <a href="{% url 'courses:list' %}" class="btn btn-sm btn-outline-primary">Browse</a>
+              {% endif %}
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Submit a challenge
+              {% if stats.my_submissions %}
+                <span class="badge text-bg-success">Done</span>
+              {% else %}
+                <a href="{% url 'challenges:list' %}" class="btn btn-sm btn-outline-primary">Open</a>
+              {% endif %}
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Publish a project
+              {% if stats.my_projects %}
+                <span class="badge text-bg-success">Done</span>
+              {% else %}
+                <a href="{% url 'portfolio:create' %}" class="btn btn-sm btn-outline-primary">Create</a>
+              {% endif %}
+            </li>
+          </ul>
+          <div class="text-muted small mt-2">
+            Tip: Collect a couple of reviews to showcase quality on your public projects.
+          </div>
         </div>
       </div>
     </div>
