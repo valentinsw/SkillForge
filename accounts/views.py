@@ -4,20 +4,30 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import RegistrationForm, ProfileForm
 from .models import Profile
+
 User = get_user_model()
+
 
 class RegisterView(CreateView):
     template_name = "accounts/register.html"
     form_class = RegistrationForm
     success_url = reverse_lazy("accounts:login")
 
+
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
-    template_name = "accounts/profile.html"
+    template_name = "accounts/profile.html"  # keep your custom template
     form_class = ProfileForm
 
     def get_object(self):
         profile, _ = Profile.objects.get_or_create(user=self.request.user)
         return profile
 
+    def get_form_kwargs(self):
+        # Pass the user into the form so we can prefill/save first/last name
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
     def get_success_url(self):
         return reverse_lazy("dashboard")
+
