@@ -15,11 +15,14 @@ urlpatterns = [
 
     # Primary create route
     path("<int:challenge_pk>/submit/", SubmissionCreateView.as_view(), name="submit"),
-
-    # Alias used by templates (same pattern, different name)
+    # Back-compat alias (some templates might still use this)
     path("<int:challenge_pk>/submit/", SubmissionCreateView.as_view(), name="submission-create"),
 
-    path("submission/<int:pk>/edit/", SubmissionUpdateView.as_view(), name="submission_edit"),
+    # Edit/Delete (canonical underscore names)
+    path("submission/<int:pk>/edit/",   SubmissionUpdateView.as_view(), name="submission_edit"),
     path("submission/<int:pk>/delete/", SubmissionDeleteView.as_view(), name="submission_delete"),
+    # Aliases with hyphens (tolerate older template links)
+    path("submission/<int:pk>/edit/",   SubmissionUpdateView.as_view(), name="submission-edit"),
+    path("submission/<int:pk>/delete/", SubmissionDeleteView.as_view(), name="submission-delete"),
 ]
 
